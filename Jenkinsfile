@@ -4,7 +4,7 @@ pipeline {
     environment {
         APP_NAME = 'laravel-vue-app'
         APP_PATH = '/var/www/laravel-vue-app'
-        NODE_VERSION = '18'
+        NODE_VERSION = 'Node.js 18'
     }
     
     stages {
