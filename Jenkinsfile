@@ -79,10 +79,16 @@ pipeline {
         stage('6. Prepare Deployment Package') {
             steps {
                 script {
-                    // Buat arsip dari file yang akan di-deploy.
-                    // Kecualikan file/folder yang tidak perlu di production.
-                    // .env dikecualikan di sini karena diasumsikan dikelola di server atau via Jenkins credentials.
-                    sh "tar -czf deployment.tar.gz --exclude='.git' --exclude='node_modules' --exclude='.env' --exclude='Jenkinsfile' --exclude='storage/logs/*' --exclude='storage/framework/sessions/*' --exclude='storage/framework/cache/*' --exclude='storage/framework/views/*' --exclude='public/storage' ."
+                    echo "Membuat arsip deployment..."
+                    // Membuat arsip di /tmp lalu memindahkannya ke workspace
+                    // Menggunakan -C ${env.WORKSPACE} untuk memastikan tar beroperasi pada direktori workspace
+                    // dan '.' setelah -C mengacu pada direktori workspace tersebut.
+                    sh "tar -czf /tmp/deployment_pkg_temp.tar.gz --exclude='./.git' --exclude='./node_modules' --exclude='./.env' --exclude='./Jenkinsfile' --exclude='./storage/logs/*' --exclude='./storage/framework/sessions/*' --exclude='./storage/framework/cache/*' --exclude='./storage/framework/views/*' --exclude='./public/storage' -C ${env.WORKSPACE} ."
+                    
+                    echo "Memindahkan arsip ke workspace..."
+                    sh "mv /tmp/deployment_pkg_temp.tar.gz ${env.WORKSPACE}/deployment.tar.gz"
+                    
+                    echo "Arsip deployment.tar.gz berhasil dibuat di workspace."
                 }
             }
         }
