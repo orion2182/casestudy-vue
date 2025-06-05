@@ -96,7 +96,7 @@ pipeline {
         stage('7. Deploy to VPS') {
             // Hanya deploy jika build berasal dari branch produksi yang ditentukan
             when {
-                branch env.PRODUCTION_BRANCH
+                expression { env.BRANCH_NAME == env.PRODUCTION_BRANCH }
             }
             steps {
                 // Gunakan credential SSH yang sudah disetup di Jenkins
